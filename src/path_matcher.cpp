@@ -4,7 +4,12 @@
 
 #include <path_matcher.h>
 
+using namespace std;
 
-PathMatcher::Matcher::Matcher() {
+PathMatcher::Matcher::Matcher(string& pathToMatch) {
 
+}
+
+bool PathMatcher::Matcher::matches(string path, vector<string>& argsOut) {
+    return false;
 }
