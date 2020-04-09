@@ -47,6 +47,7 @@ target_link_libraries(TestPatchMatcher
 )
 add_test(NAME test_path_matcher COMMAND TestPatchMatcher)
 
-add_library(path_matcher
+add_library(path_matcher STATIC
   src/path_matcher.cpp
-)
+  src/parser.cpp
+  src/lexer.cpp src/lexer.h)

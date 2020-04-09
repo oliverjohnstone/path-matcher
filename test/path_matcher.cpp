@@ -11,10 +11,9 @@ using namespace std;
 namespace {
     TEST(PathMatcherTest, SupportsBasicRoutes) {
         vector<string> args;
-        string path = "/test/123";
-        Matcher matcher(path);
+        Matcher matcher("/test/:idOne/:idTwo/three/(.*)/(.*)");
 
-        auto result = matcher.matches("/test/123", args);
+        auto result = matcher.matches("/test/123/456/three/captureGroup1", args);
 
         EXPECT_EQ(result, true);
     }

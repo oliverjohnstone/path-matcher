@@ -1,12 +1,14 @@
-#Path Matcher
+# Path Matcher
 
-This library supports matching regex paths to named parameters
+This library supports matching regex paths to named parameters.
 
-##Dependencies
+Inspired by / copied from [path-to-regexp](https://github.com/pillarjs/path-to-regexp)
+
+## Dependencies
 
 * [Boost Regex](https://www.boost.org/doc/libs/1_66_0/libs/regex/doc/html/index.html)
 
-##Example
+## Example
 
 ```c++
 #include <path_matcher.h>
@@ -20,6 +22,6 @@ if (matcher.matches("/test/hello/world", namedParts)) {
     // Patch matches and namedParts has been populated with:
     // {{"arg1", "hello}, {"arg2", "world"}}
 } else {
-    // Patch does not match
+    // Path does not match
 }
 ```

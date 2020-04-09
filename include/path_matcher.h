@@ -9,9 +9,14 @@
 
 namespace PathMatcher {
     class Matcher {
+    private:
+        class Implementation;
+        Implementation *implementation;
+
     public:
-        explicit Matcher(std::string& pathToMatch);
-        bool matches(std::string path, std::vector<std::string> &argsOut);
+        explicit Matcher(const std::string& pathToMatch);
+        virtual ~Matcher();
+        bool matches(const std::string& path, std::vector<std::string> &argsOut);
     };
 }
 
