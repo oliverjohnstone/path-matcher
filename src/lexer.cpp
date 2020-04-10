@@ -153,7 +153,7 @@ int PathMatcher::Lexer::parsePattern(std::string &patternOut, int patternPositio
         } else if (isPatternIndicator(ch)) {
             patternCount++;
 
-            if (path[i] == '?') {
+            if (path[i + 1] == '?') {
                 stringstream message;
                 message << "Capturing groups not allowed at position " << i << ".";
                 throw invalid_argument(message.str());
