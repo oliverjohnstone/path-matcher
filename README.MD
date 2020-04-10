@@ -12,15 +12,20 @@ Inspired by / copied from [path-to-regexp](https://github.com/pillarjs/path-to-r
 
 ```c++
 #include <path_matcher.h>
+#include <iostream>
 
 using namespace std;
+using namespace PathMatcher;
 
-vector<string> namedParts;
-PathMatcher::Matcher matcher("/test/:arg1/:arg2");
+ArgResults namedParts;
+Matcher matcher("/test/:arg1/:arg2");
 
 if (matcher.matches("/test/hello/world", namedParts)) {
-    // Patch matches and namedParts has been populated with:
+    // Path matches and namedParts has been populated with:
     // {{"arg1", "hello}, {"arg2", "world"}}
+
+    cout << "arg1: " << namedParts["arg1"] << endl;
+    cout << "arg2: " << namedParts["arg2"] << endl;
 } else {
     // Path does not match
 }
