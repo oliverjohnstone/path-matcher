@@ -113,7 +113,9 @@ void PathMatcher::Lexer::parseTokens() {
 }
 
 int PathMatcher::Lexer::parseName(std::string &nameOut, int indicatorPos) {
-    for (auto i = indicatorPos + 1; i < path.length(); i++) {
+    auto i = indicatorPos + 1;
+
+    for (; i < path.length(); i++) {
         auto ch = path[i];
         if (isValidNameChar(ch)) {
             nameOut += ch;
@@ -122,7 +124,7 @@ int PathMatcher::Lexer::parseName(std::string &nameOut, int indicatorPos) {
         return i - 1;
     }
 
-    return indicatorPos;
+    return i;
 }
 
 int PathMatcher::Lexer::parsePattern(std::string &patternOut, int patternPosition) {

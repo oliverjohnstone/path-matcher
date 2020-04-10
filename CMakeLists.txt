@@ -2,8 +2,19 @@ cmake_minimum_required(VERSION 3.15)
 project(path_matcher)
 
 set(CMAKE_CXX_STANDARD 20)
+set(BOOST_ROOT ~/boost-lib)
 
-include_directories(include)
+include_directories(
+  include
+  ~/boost-lib/include
+)
+
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.72.0 COMPONENTS regex)
+
+if(NOT Boost_FOUND)
+  message(FATAL_ERROR "Could not find boost!")
+endif()
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -50,4 +61,10 @@ add_test(NAME test_path_matcher COMMAND TestPatchMatcher)
 add_library(path_matcher STATIC
   src/path_matcher.cpp
   src/parser.cpp
-  src/lexer.cpp src/lexer.h)
+  src/lexer.cpp src/lexer.h
+  src/translate.cpp src/translate.h
+)
+
+target_link_libraries(path_matcher
+  ${Boost_LIBRARIES}
+)

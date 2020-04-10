@@ -8,7 +8,7 @@
 
 using namespace std;
 
-auto DEFAULT_PATTERN = "[^\\/#\?]+?";
+auto ARG_VALUE_PATTERN = R"([.\w_\-~]+?)";
 
 auto excludePrefix = [](char ch) {
     return ch == '.' || ch == '/';
@@ -86,7 +86,7 @@ void PathMatcher::Parser::parseLexTokens(vector<LexToken> &lexTokens) {
             ParseToken tok = {
                 .prefix = prefix,
                 .suffix = "",
-                .pattern = patternTok ? patternTok->value : DEFAULT_PATTERN,
+                .pattern = patternTok ? patternTok->value : ARG_VALUE_PATTERN,
                 .modifier = modifier ? modifier->value : ""
             };
 
@@ -133,7 +133,7 @@ void PathMatcher::Parser::parseLexTokens(vector<LexToken> &lexTokens) {
                     tok.pattern = pattern->value;
                 } else {
                     tok.name = name->value;
-                    tok.pattern = DEFAULT_PATTERN;
+                    tok.pattern = ARG_VALUE_PATTERN;
                 }
             } else if (pattern) {
                 tok.name = key++;
@@ -146,4 +146,8 @@ void PathMatcher::Parser::parseLexTokens(vector<LexToken> &lexTokens) {
 
         mustConsume(LexTokenType::END);
     }
+}
+
+const PathMatcher::TokenCollection &PathMatcher::Parser::getTokens() const {
+    return tokens;
 }

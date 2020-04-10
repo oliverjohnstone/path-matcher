@@ -18,15 +18,16 @@ namespace PathMatcher {
         std::string modifier;
     } ParseToken;
 
+    typedef std::vector<std::variant<ParseToken, std::string>> TokenCollection;
+
     class Parser {
     private:
-        std::vector<std::variant<ParseToken, std::string>> tokens;
+        TokenCollection tokens;
 
     public:
         explicit Parser(std::vector<LexToken>& tokens);
-        auto begin() { return tokens.begin(); }
-        auto end() { return tokens.end(); }
         void parseLexTokens(std::vector<LexToken> &lexTokens);
+        [[nodiscard]] const TokenCollection &getTokens() const;
     };
 }
 

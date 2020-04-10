@@ -5,40 +5,65 @@
 #include <path_matcher.h>
 #include "lexer.h"
 #include "parser.h"
-
+#include "translate.h"
 
 #include <iostream>
 
 using namespace std;
 
+auto zip = [](vector<PathMatcher::ParseToken>& tokens, vector<string>& matches, PathMatcher::ArgResults& out) {
+    for (int i = 0; i < tokens.size() && i < matches.size(); i++) {
+        auto token = tokens[i];
+        string key;
+
+        if (auto str = get_if<string>(&token.name)) {
+            key = *str;
+        } else {
+            stringstream ss;
+            ss << "captureGroup_" << get<int>(token.name);
+            key = ss.str();
+        }
+
+        out[key] = matches[i];
+    }
+};
+
 class PathMatcher::Matcher::Implementation {
-private:
 public:
+    vector<ParseToken> tokens;
+    boost::regex regex;
+
     explicit Implementation(const string& pathToMatch) {
         Lexer lexer(pathToMatch);
         Parser parser(lexer.getTokens());
-
-        for (auto &token : parser) {
-            if (auto tok = std::get_if<ParseToken>(&token)) {
-                if (auto nameInt = std::get_if<int>(&tok->name)) {
-                    std::cout << *nameInt << " " << tok->pattern << std::endl;
-                } else {
-                    auto nameStr = std::get<string>(tok->name);
-                    std::cout << tok->prefix << " " << nameStr << tok->suffix << std::endl;
-                }
-            } else {
-                auto tokStr = get<string>(token);
-                std::cout << "STRING " << tokStr << std::endl;
-            }
-        }
+        regex = Translate::toRegex(parser.getTokens(), tokens);
     }
 };
 
 PathMatcher::Matcher::Matcher(const string& pathToMatch) : implementation(new Implementation(pathToMatch)) {
 }
 
-bool PathMatcher::Matcher::matches(const string& path, vector<string>& argsOut) {
-    return false;
+bool PathMatcher::Matcher::matches(const string& text, ArgResults& argsOut) {
+    boost::smatch what;
+    vector<string> matches;
+
+    if (!boost::regex_match(text, what, implementation->regex, boost::match_extra)) {
+        return false;
+    }
+
+    for (int i = 1; i < what.size(); ++i) {
+        matches.emplace_back(what[i]);
+    }
+
+    if (matches.size() != implementation->tokens.size()) {
+        stringstream msg;
+        msg << "Invalid number of matches, expected " << implementation->tokens.size() << " but got " << matches.size() << ".";
+        throw invalid_argument(msg.str());
+    }
+
+    zip(implementation->tokens, matches, argsOut);
+
+    return true;
 }
 
 PathMatcher::Matcher::~Matcher() {

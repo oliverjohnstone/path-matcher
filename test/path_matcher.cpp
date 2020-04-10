@@ -10,11 +10,12 @@ using namespace std;
 
 namespace {
     TEST(PathMatcherTest, SupportsBasicRoutes) {
-        vector<string> args;
-        Matcher matcher("/test/:idOne/:idTwo/three/(.*)/(.*)");
+        ArgResults args;
+        Matcher matcher("/test/:testArg/:testArg2");
 
-        auto result = matcher.matches("/test/123/456/three/captureGroup1", args);
-
-        EXPECT_EQ(result, true);
+        EXPECT_TRUE(matcher.matches("/test/test2/test3", args));
+        EXPECT_EQ(args.size(), 2);
+        EXPECT_STREQ(args["testArg"].c_str(), "test2");
+        EXPECT_STREQ(args["testArg2"].c_str(), "test3");
     }
 }
