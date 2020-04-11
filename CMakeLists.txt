@@ -51,11 +51,12 @@ endif()
 # Now simply link against gtest or gtest_main as needed. Eg
 add_executable(TestPatchMatcher
   test/path_matcher.cpp
-  test/lexer.cpp test/parser.cpp)
+  test/lexer.cpp test/parser.cpp test/translate.cpp)
 target_link_libraries(TestPatchMatcher
   gtest_main
   path_matcher
 )
+
 add_test(NAME test_path_matcher COMMAND TestPatchMatcher)
 
 add_library(path_matcher STATIC
